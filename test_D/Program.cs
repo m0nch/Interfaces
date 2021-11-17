@@ -11,15 +11,14 @@ namespace test_D
         static void Main(string[] args)
         {
             Generate generate = new Generate(new Email(), new Sms(), new Mms());  
-            generate.GetMessages();
             List<IMessenger> message = generate.GetMessages();
 
-            Email email = new Email();
-            Sms sms = new Sms();
-            Mms mms = new Mms();
-            message.Add(email);
-            message.Add(sms);
-            message.Add(mms);
+            //Email email = new Email();
+            //Sms sms = new Sms();
+            //Mms mms = new Mms();
+            //message.Add(email);
+            //message.Add(sms);
+            //message.Add(mms);
 
             for (int i = 0; i < message.Count; i++)
             {
@@ -39,8 +38,8 @@ namespace test_D
     public class Generate
     {
         Random rnd = new Random();
-        //int count = rnd.Next(1, 100);
         List<IMessenger> message = new List<IMessenger>();
+
         public Generate(params IMessenger[] messenger)
         {            
             for (int i = 0; i < messenger.Length; i++)
@@ -66,7 +65,7 @@ namespace test_D
             return new Sms();
         }
 
-        public IMessenger GetMessages()
+        public List<IMessenger> GetMessages()
         {
             return message;
         }
