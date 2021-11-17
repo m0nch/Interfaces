@@ -10,16 +10,17 @@ namespace test_D
     {
         static void Main(string[] args)
         {
-            Generate generate = new Generate(new Email(), new Sms(), new Mms());
-            List<IMessenger> message = new List<IMessenger>();
+            Generate generate = new Generate(new Email(), new Sms(), new Mms());  
+            generate.GetMessages();
+            List<IMessenger> message = generate.GetMessages();
 
-            //message.Add(generate.GenerateMessage());
-            //Email email = new Email();
-            //Sms sms = new Sms();
-            //Mms mms = new Mms();
-            //message.Add(email);
-            //message.Add(sms);
-            //message.Add(mms);
+            Email email = new Email();
+            Sms sms = new Sms();
+            Mms mms = new Mms();
+            message.Add(email);
+            message.Add(sms);
+            message.Add(mms);
+
             for (int i = 0; i < message.Count; i++)
             {
                 Notification notification = new Notification(message[i]);
@@ -41,8 +42,7 @@ namespace test_D
         //int count = rnd.Next(1, 100);
         List<IMessenger> message = new List<IMessenger>();
         public Generate(params IMessenger[] messenger)
-        {
-            
+        {            
             for (int i = 0; i < messenger.Length; i++)
             {
                 message.Add(messenger[i]);
@@ -64,6 +64,11 @@ namespace test_D
                 case 3: return new Mms();
             }
             return new Sms();
+        }
+
+        public IMessenger GetMessages()
+        {
+            return message;
         }
     }
     public class Email : IMessenger
