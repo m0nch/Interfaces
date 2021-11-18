@@ -11,21 +11,21 @@ namespace test_D
         static void Main(string[] args)
         {
             Generate generate = new Generate(new Email(), new Sms(), new Mms());  
-            List<IMessenger> message = generate.GetMessages();
+            List<IMessage> message = generate.GetMessages();
 
 
             for (int i = 0; i < message.Count; i++)
             {
                 Notification notification = new Notification(message[i]);
-                if ((IMessenger)message[i] is Email)
+                if (message[i] is Email)
                 {
                     notification.Text = "Notification: You have a new e-mail";
                 }
-                else if ((IMessenger)message[i] is Sms)
+                else if (message[i] is Sms)
                 {
                     notification.Text = "Notification: You have a new sms";
                 }
-                else if ((IMessenger)message[i] is Mms)
+                else if (message[i] is Mms)
                 {
                     notification.Text = "Notification: You have a new mms";
                 }
@@ -36,7 +36,7 @@ namespace test_D
         }
     }
 
-    public interface IMessenger
+    public interface IMessage
     {
         void SendMessage(string text);
     }
@@ -44,44 +44,44 @@ namespace test_D
     public class Generate
     {
         //Random rnd = new Random();
-        List<IMessenger> message = new List<IMessenger>();
+        List<IMessage> _message = new List<IMessage>();
 
-        public Generate(params IMessenger[] messenger)
+        public Generate(params IMessage[] message)
         {
             int maxCount = 20;
-            for (int i = 0; i < messenger.Length; i++)
+            for (int i = 0; i < message.Length; i++)
             {
-                message.Add(messenger[i]);
+                _message.Add(message[i]);
             }
-            for (int i = messenger.Length; i < maxCount - messenger.Length; i+=3)
+            for (int i = message.Length; i < maxCount - message.Length; i+=3)
             {
-                message.Add(GenerateEmail());
-                message.Add(GenerateSms());
-                message.Add(GenerateMms());
+                _message.Add(GenerateEmail());
+                _message.Add(GenerateSms());
+                _message.Add(GenerateMms());
             }
         }
 
-        public IMessenger GenerateEmail()
+        public IMessage GenerateEmail()
         {
             return new Email();
         }
 
-        public IMessenger GenerateSms()
+        public IMessage GenerateSms()
         {
             return new Sms();
         }
 
-        public IMessenger GenerateMms()
+        public IMessage GenerateMms()
         {
             return new Mms();
         }
 
-        public List<IMessenger> GetMessages()
+        public List<IMessage> GetMessages()
         {
-            return message;
+            return _message;
         }
     }
-    public class Email : IMessenger
+    public class Email : IMessage
     {
         public void SendMessage(string text)
         {
@@ -89,7 +89,7 @@ namespace test_D
         }
     }
 
-    public class Sms : IMessenger
+    public class Sms : IMessage
     {
         public void SendMessage(string text)
         {
@@ -97,7 +97,7 @@ namespace test_D
         }
     }
 
-    public class Mms : IMessenger
+    public class Mms : IMessage
     {
         public void SendMessage(string text)
         {
@@ -107,15 +107,15 @@ namespace test_D
 
     public class Notification
     {
-        private IMessenger _iMessenger;
+        private IMessage _iMessage;
         public string Text { get; set; }
-        public Notification(IMessenger iMessenger)
+        public Notification(IMessage iMessage)
         {
-            _iMessenger = iMessenger;
+            _iMessage = iMessage;
         }
         public void DoNotify()
         {
-            _iMessenger.SendMessage(Text);
+            _iMessage.SendMessage(Text);
         }
     }
 }
